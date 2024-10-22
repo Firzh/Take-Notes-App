@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catatan Kita</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      .note {
+        transition: all 0.3s ease;
+      }
+      .note:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .color-picker button:hover {
+        transform: scale(1.1);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <!-- Header Section -->
+      <header class="flex justify-between items-center mb-8">
+        <div class="flex items-start">
+          <img src="./assets/img/logocakit.png" alt="Catatan Kita Logo" class="w-10 h-10" />
+          <h1 class="text-3xl font-bold text-gray-800 ml-5">Catatan Kita</h1>
+        </div>
+
+        <div class="flex space-x-4">
+          <button onclick="NotesUI.toggleView()" class="text-gray-600 hover:text-gray-800">
+            <i id="view-toggle" class="fas fa-th"></i>
+          </button>
+          <div class="relative">
+            <input type="text" id="search-input" class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Search notes..." />
+          </div>
+        </div>
+      </header>
+
+      <!-- Navigation -->
+      <nav class="flex space-x-4 mb-8">
+        <button onclick="NotesUI.currentView = 'notes'; notesManager.updateView()" class="px-4 py-2 rounded-lg bg-purple-500 text-white hover:bg-purple-900">Notes</button>
+        <button onclick="NotesUI.currentView = 'reminder'; notesManager.updateView()" class="px-4 py-2 rounded-lg bg-purple-500 text-white hover:bg-purple-900">Reminder</button>
+        <button onclick="NotesUI.currentView = 'archive'; notesManager.updateView()" class="px-4 py-2 rounded-lg bg-purple-500 text-white hover:bg-purple-900">Archive</button>
+        <button onclick="NotesUI.currentView = 'trash'; notesManager.updateView()" class="px-4 py-2 rounded-lg bg-purple-500 text-white hover:bg-purple-900">Trash</button>
+        <button onclick="NotesUI.currentView = 'tags'; notesManager.renderTags()" class="px-4 py-2 rounded-lg bg-purple-500 text-white hover:bg-purple-900">Tags</button>
+      </nav>
+
+      <!-- Note Input Section -->
+      <div id="note-input" class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <input type="text" id="note-title" class="w-full mb-4 text-xl font-medium border-none focus:outline-none" placeholder="Judul" />
+        <textarea id="note-content" class="w-full mb-4 resize-none border-none focus:outline-none" rows="3" placeholder="Tulis catatan anda disini..."></textarea>
+
+        <!-- Tools Section -->
+        <div class="flex justify-between items-center">
+          <div class="flex space-x-4">
+            <!-- Color Picker -->
+            <div class="relative">
+              <button onclick="NotesUI.toggleColorPalette()" class="text-gray-600 hover:text--800">
+                <i class="fas fa-palette"></i>
+              </button>
+              <div id="color-palette" class="hidden absolute top-10 left-0 bg-purple-500 p-2 pr-8 rounded-lg shadow-lg grid grid-cols-10 gap-6"></div>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="relative">
+              <input type="file" id="image-upload" class="hidden" onchange="notesManager.uploadImage()" />
+              <button onclick="document.getElementById('image-upload').click()" class="text-gray-600 hover:text-gray-800">
+                <i class="fas fa-image"></i>
+              </button>
+            </div>
+
+            <!-- Checklist -->
+            <button onclick="notesManager.toggleChecklist()" class="text-gray-600 hover:text-gray-800">
+              <i class="fas fa-tasks"></i>
+            </button>
+
+            <!-- Reminder -->
+            <div class="relative">
+              <button onclick="NotesUI.toggleReminder()" class="text-gray-600 hover:text-gray-800">
+                <i class="fas fa-bell"></i>
+              </button>
+              <div id="reminder-options" class="hidden absolute top-10 left-0 bg-white p-2 rounded-lg shadow-lg">
+                <input type="datetime-local" id="reminder-datetime" class="p-2 border border-gray-300 rounded" />
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="relative">
+              <button onclick="NotesUI.toggleTags()" class="text-gray-600 hover:text-gray-800">
+                <i class="fas fa-tags"></i>
+              </button>
+              <div id="tag-options" class="hidden absolute top-10 left-0 bg-white p-2 rounded-lg shadow-lg">
+                <div class="flex space-x-2">
+                  <input type="text" id="tag-input" class="p-2 border border-gray-300 rounded" placeholder="Add tag" />
+                  <button onclick="notesManager.addTag()" class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="notesManager.addNote()" class="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-900">Add Note</button>
+        </div>
+      </div>
+
+      <!-- Notes Container -->
+      <div id="notes-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Notes will be dynamically inserted here -->
+      </div>
+    </div>
+    <!-- JavaScript -->
+    <script src="./renderer.js"></script>
+  </body>
+</html>
